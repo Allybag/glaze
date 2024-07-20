@@ -25,6 +25,12 @@
 
 namespace glz
 {
+   // Ally Hack
+   template <typename EnumT>
+   struct HasDefault
+   {
+       static constexpr bool value{false};
+   };
 
    // forward declare from json/wrappers.hpp to avoid circular include
    template <class T>
@@ -892,7 +898,14 @@ namespace glz
                value = member_it->second;
             }
             else [[unlikely]] {
-               ctx.error = error_code::unexpected_enum;
+               if constexpr (HasDefault<T>::value)
+               {
+                   value = HasDefault<T>::default_value;
+               }
+               else
+               {
+                   ctx.error = error_code::unexpected_enum;
+               }
             }
          }
       };
