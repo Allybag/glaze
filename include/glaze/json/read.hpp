@@ -29,7 +29,7 @@ namespace glz
    template <typename EnumT>
    struct HasDefault
    {
-       static constexpr bool value{false};
+      static constexpr bool value{false};
    };
 
    // forward declare from json/wrappers.hpp to avoid circular include
@@ -898,13 +898,11 @@ namespace glz
                value = member_it->second;
             }
             else [[unlikely]] {
-               if constexpr (HasDefault<T>::value)
-               {
-                   value = HasDefault<T>::default_value;
+               if constexpr (HasDefault<T>::value) {
+                  value = HasDefault<T>::default_value;
                }
-               else
-               {
-                   ctx.error = error_code::unexpected_enum;
+               else {
+                  ctx.error = error_code::unexpected_enum;
                }
             }
          }
