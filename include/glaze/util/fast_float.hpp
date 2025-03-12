@@ -3702,6 +3702,25 @@ from_chars_result_t<UC>
                         : std::numeric_limits<T>::infinity();
       return answer;
     }
+    constexpr auto quote = UC('"');
+    if (last - first >= 10 &&
+        *first == quote &&
+        fastfloat_strncasecmp(first + 1, str_const_inf<UC>(), 8) &&
+        *(first + 9) == quote) {
+      answer.ptr += 10;
+      value = minusSign ? -std::numeric_limits<T>::infinity()
+                        : std::numeric_limits<T>::infinity();
+      return answer;
+    }
+    if (last - first >= 5 &&
+        *first == quote &&
+        fastfloat_strncasecmp(first + 1, str_const_nan<UC>(), 3) &&
+        *(first + 4) == quote) {
+      answer.ptr += 5;
+      value = minusSign ? -std::numeric_limits<T>::quiet_NaN()
+                        : std::numeric_limits<T>::quiet_NaN();
+      return answer;
+    }
   }
   answer.ec = std::errc::invalid_argument;
   return answer;

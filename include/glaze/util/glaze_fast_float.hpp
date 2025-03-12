@@ -243,7 +243,7 @@ namespace glz
 
       parsed_number_string_t<UC> pns = glz::parse_number_string<null_terminated, UC>(first, last);
       if (!pns.valid) [[unlikely]] {
-         return {.ptr = first, .ec = std::errc::invalid_argument};
+         return glz::fast_float::detail::parse_infnan(first, last, value, glz::fast_float::chars_format::json_or_infnan);
       }
 
       return from_chars_advanced(pns, value);
