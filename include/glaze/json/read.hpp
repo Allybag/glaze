@@ -259,14 +259,14 @@ namespace glz
       }
       else [[unlikely]] {
          if constexpr (HasDefault<T>::value) {
-           while (*it != '"') {
-              // Skip characters till we get to the closing quote
-              ++it;
-           }
-           // Skip the closing quote too
-           ++it;
-           value = HasDefault<T>::default_value;
-           return;
+            while (*it != '"') {
+               // Skip characters till we get to the closing quote
+               ++it;
+            }
+            // Skip the closing quote too
+            ++it;
+            value = HasDefault<T>::default_value;
+            return;
          }
          ctx.error = error_code::unexpected_enum;
          return;
