@@ -3816,6 +3816,38 @@ suite nan_tests = [] {
    };
 };
 
+suite quoted_nan_inf_tests = [] {
+   "quoted_nan_standalone"_test = [] {
+      double d = 0.0;
+      std::string s = R"("NaN")";
+      expect(not glz::read_json(d, s));
+      expect(std::isnan(d));
+   };
+
+   "quoted_infinity_standalone"_test = [] {
+      double d = 0.0;
+      std::string s = R"("Infinity")";
+      expect(not glz::read_json(d, s));
+      expect(d == std::numeric_limits<double>::infinity());
+   };
+
+   "quoted_neg_infinity_standalone"_test = [] {
+      double d = 0.0;
+      std::string s = R"("-Infinity")";
+      expect(not glz::read_json(d, s));
+      expect(d == -std::numeric_limits<double>::infinity());
+   };
+
+   "quoted_nan_in_array"_test = [] {
+      std::array<double, 3> arr{};
+      std::string s = R"(["NaN", "Infinity", "-Infinity"])";
+      expect(not glz::read_json(arr, s));
+      expect(std::isnan(arr[0]));
+      expect(arr[1] == std::numeric_limits<double>::infinity());
+      expect(arr[2] == -std::numeric_limits<double>::infinity());
+   };
+};
+
 struct holder0_t
 {
    int i{};

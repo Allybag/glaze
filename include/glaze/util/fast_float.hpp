@@ -4117,6 +4117,7 @@ from_chars_result_t<UC>
       return answer;
     }
     constexpr auto quote = UC('"');
+    // "Infinity"
     if (last - first >= 10 &&
         *first == quote &&
         fastfloat_strncasecmp(first + 1, str_const_inf<UC>(), 8) &&
@@ -4126,6 +4127,17 @@ from_chars_result_t<UC>
                         : std::numeric_limits<T>::infinity();
       return answer;
     }
+    // "-Infinity"
+    if (last - first >= 11 &&
+        *first == quote &&
+        *(first + 1) == UC('-') &&
+        fastfloat_strncasecmp(first + 2, str_const_inf<UC>(), 8) &&
+        *(first + 10) == quote) {
+      answer.ptr += 11;
+      value = -std::numeric_limits<T>::infinity();
+      return answer;
+    }
+    // "NaN"
     if (last - first >= 5 &&
         *first == quote &&
         fastfloat_strncasecmp(first + 1, str_const_nan<UC>(), 3) &&
