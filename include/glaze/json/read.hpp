@@ -34,6 +34,13 @@
 
 namespace glz
 {
+   // Ally Hack
+   template <typename EnumT>
+   struct HasDefault
+   {
+      static constexpr bool value{false};
+   };
+
    // forward declare from json/wrappers.hpp to avoid circular include
    template <class T>
    struct quoted_t;
@@ -341,6 +348,16 @@ namespace glz
          }
       }
       else [[unlikely]] {
+         if constexpr (HasDefault<T>::value) {
+            while (*it != '"') {
+               // Skip characters till we get to the closing quote
+               ++it;
+            }
+            // Skip the closing quote too
+            ++it;
+            value = HasDefault<T>::default_value;
+            return;
+         }
          ctx.error = error_code::unexpected_enum;
          return;
       }
@@ -1969,6 +1986,16 @@ namespace glz
                return;
 
             if (index >= N) [[unlikely]] {
+               if constexpr (HasDefault<T>::value) {
+                  while (*it != '"') {
+                     // Skip characters till we get to the closing quote
+                     ++it;
+                  }
+                  // Skip the closing quote too
+                  ++it;
+                  value = HasDefault<T>::default_value;
+                  return;
+               }
                ctx.error = error_code::unexpected_enum;
                return;
             }
@@ -1984,6 +2011,17 @@ namespace glz
             const auto index = decode_hash<JSON, T, HashInfo, HashInfo.type>::op(it, end);
 
             if (index >= N) [[unlikely]] {
+               if constexpr (HasDefault<T>::value) {
+                  while (*it != '"') {
+                     // Skip characters till we get to the closing quote
+                     ++it;
+                  }
+                  // Skip the closing quote too
+                  ++it;
+                  value = HasDefault<T>::default_value;
+                  return;
+               }
+
                ctx.error = error_code::unexpected_enum;
                return;
             }
@@ -2037,7 +2075,12 @@ namespace glz
                value = *result;
             }
             else [[unlikely]] {
-               ctx.error = error_code::unexpected_enum;
+               if constexpr (HasDefault<T>::value) {
+                  value = HasDefault<T>::default_value;
+               }
+               else {
+                  ctx.error = error_code::unexpected_enum;
+               }
             }
          }
          else
