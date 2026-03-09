@@ -98,6 +98,7 @@ namespace glz
 
       bool partial_read =
          false; // Reads into the deepest structural object and then exits without parsing the rest of the input
+      bool raw_string = false; // Skip escape sequence encoding/decoding for strings
 
       // INTERNAL OPTIONS
       uint32_t internal{}; // default should be 0
