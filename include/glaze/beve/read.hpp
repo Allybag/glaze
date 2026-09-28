@@ -2660,6 +2660,12 @@ namespace glz
                   return;
                }
             }
+
+            // Ally hack: the entry count is known and already bounded by the remaining input, so
+            // hash maps can size their table once instead of rehashing as they grow
+            if constexpr (requires { value.reserve(n); }) {
+               value.reserve(n);
+            }
          }
 
          constexpr uint8_t key_tag = beve_key_traits<Key>::key_tag;
