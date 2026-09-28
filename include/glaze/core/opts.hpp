@@ -136,7 +136,7 @@ namespace glz
    // If, after parsing a value, we want to validate the trailing whitespace
 
    // ---
-   // bool validate_utf8 = true;
+   // bool validate_utf8 = false; // Ally hack: upstream defaults to true
    // Validate that strings encountered while reading are well formed UTF-8, as RFC 8259 section 8.1
    // requires. Malformed input fails with error_code::invalid_utf8. On by default: read input is by
    // definition someone else's data, and accepting malformed encodings propagates them into your
@@ -457,7 +457,7 @@ namespace glz
          return Opts.validate_utf8;
       }
       else {
-         return true;
+         return false; // Ally hack: upstream defaults to true
       }
    }
 
